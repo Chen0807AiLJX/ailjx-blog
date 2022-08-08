@@ -2,11 +2,15 @@
  * @Author: AiLjx
  * @Date: 2022-08-08 18:11:50
  * @LastEditors: AiLjx
- * @LastEditTime: 2022-08-08 18:11:50
+ * @LastEditTime: 2022-08-08 20:15:29
  */
 import { parseISO, format } from "date-fns";
 
-export default function Date({ dateString }: any) {
+interface Props {
+    dateString: string;
+}
+
+export default function Date({ dateString }: Props) {
     const date = parseISO(dateString);
-    return <time dateTime={dateString}>{format(date, "LLLL d, yyyy")}</time>;
+    return <time dateTime={dateString}>{format(date, "yyyy年MM月dd日")}</time>;
 }

@@ -2,9 +2,9 @@
  * @Author: AiLjx
  * @Date: 2022-08-08 15:28:03
  * @LastEditors: AiLjx
- * @LastEditTime: 2022-08-08 18:18:16
+ * @LastEditTime: 2022-08-08 19:35:09
  */
-import type { NextPage } from "next";
+import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import Layout, { siteTitle } from "../components/layout";
 import Link from "next/link";
@@ -13,7 +13,15 @@ import Date from "../components/date";
 import utilStyles from "../styles/utils.module.css";
 import { getSortedPostsData } from "../utils/posts";
 
-const Home: NextPage<any> = ({ allPostsData }) => {
+interface Props {
+    allPostsData: {
+        date: string;
+        title: string;
+        id: string;
+    }[];
+}
+
+const Home: NextPage<Props> = ({ allPostsData }) => {
     return (
         <Layout home>
             <div>
@@ -21,15 +29,8 @@ const Home: NextPage<any> = ({ allPostsData }) => {
                     <title>{siteTitle}</title>
                 </Head>
                 <section className={utilStyles.headingMd}>
-                    <p>[Your Self Introduction]</p>
-                    <p>
-                        (This is a sample website - you’ll be building a site
-                        like this on{" "}
-                        <a href='https://nextjs.org/learn'>
-                            our Next.js tutorial
-                        </a>
-                        .)
-                    </p>
+                    <p>你好，我是 Ailjx</p>
+                    <p>一个又菜又爱玩的前端小白，欢迎来到我的博客！</p>
                 </section>
 
                 <section
@@ -54,9 +55,7 @@ const Home: NextPage<any> = ({ allPostsData }) => {
     );
 };
 
-export default Home;
-
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
     const allPostsData = getSortedPostsData();
 
     return {
@@ -64,4 +63,6 @@ export async function getStaticProps() {
             allPostsData,
         },
     };
-}
+};
+
+export default Home;

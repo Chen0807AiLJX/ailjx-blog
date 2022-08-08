@@ -2,7 +2,7 @@
  * @Author: AiLjx
  * @Date: 2022-08-08 16:20:48
  * @LastEditors: AiLjx
- * @LastEditTime: 2022-08-08 16:56:15
+ * @LastEditTime: 2022-08-08 19:36:06
  */
 import Head from "next/head";
 import Image from "next/image";
@@ -13,7 +13,12 @@ import Link from "next/link";
 const name = "Ailjx";
 export const siteTitle = "Ailjx Blog";
 
-export default function Layout({ children, home }: any) {
+interface Props {
+    children: React.ReactNode;
+    home?: boolean;
+}
+
+export default function Layout({ children, home }: Props) {
     return (
         <div className={styles.container}>
             <Head>
@@ -33,7 +38,7 @@ export default function Layout({ children, home }: any) {
                     <>
                         <Image
                             priority
-                            src='/images/user.JPG'
+                            src='/images/author.jpg'
                             className={utilStyles.borderCircle}
                             height={144}
                             width={144}
@@ -47,7 +52,7 @@ export default function Layout({ children, home }: any) {
                             <a>
                                 <Image
                                     priority
-                                    src='/images/user.JPG'
+                                    src='/images/author.jpg'
                                     className={utilStyles.borderCircle}
                                     height={108}
                                     width={108}
