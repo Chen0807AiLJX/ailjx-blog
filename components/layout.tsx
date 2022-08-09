@@ -2,12 +2,10 @@
  * @Author: AiLjx
  * @Date: 2022-08-08 16:20:48
  * @LastEditors: AiLjx
- * @LastEditTime: 2022-08-08 19:36:06
+ * @LastEditTime: 2022-08-09 16:37:29
  */
 import Head from "next/head";
 import Image from "next/image";
-import styles from "./layout.module.css";
-import utilStyles from "../styles/utils.module.css";
 import Link from "next/link";
 
 const name = "Ailjx";
@@ -20,7 +18,7 @@ interface Props {
 
 export default function Layout({ children, home }: Props) {
     return (
-        <div className={styles.container}>
+        <div className='max-w-2xl mx-auto px-4 mt-12 mb-24'>
             <Head>
                 <link rel='icon' href='/favicon.ico' />
                 <meta name='description' content='AiljxBlog——Ailjx的博客' />
@@ -33,18 +31,20 @@ export default function Layout({ children, home }: Props) {
                 <meta name='og:title' content={siteTitle} />
                 <meta name='twitter:card' content='summary_large_image' />
             </Head>
-            <header className={styles.header}>
+            <header className='flex flex-col items-center'>
                 {home ? (
                     <>
                         <Image
                             priority
                             src='/images/author.jpg'
-                            className={utilStyles.borderCircle}
+                            className='rounded-full'
                             height={144}
                             width={144}
                             alt={name}
                         />
-                        <h1 className={utilStyles.heading2Xl}>{name}</h1>
+                        <h1 className='text-5xl font-extrabold tracking-tighter my-4'>
+                            {name}
+                        </h1>
                     </>
                 ) : (
                     <>
@@ -53,18 +53,16 @@ export default function Layout({ children, home }: Props) {
                                 <Image
                                     priority
                                     src='/images/author.jpg'
-                                    className={utilStyles.borderCircle}
+                                    className='rounded-full'
                                     height={108}
                                     width={108}
                                     alt={name}
                                 />
                             </a>
                         </Link>
-                        <h2 className={utilStyles.headingLg}>
+                        <h2 className='text-2xl my-4'>
                             <Link href='/'>
-                                <a className={utilStyles.colorInherit}>
-                                    {name}
-                                </a>
+                                <a>{name}</a>
                             </Link>
                         </h2>
                     </>
@@ -72,7 +70,7 @@ export default function Layout({ children, home }: Props) {
             </header>
             <main>{children}</main>
             {!home && (
-                <div className={styles.backToHome}>
+                <div className='mt-12'>
                     <Link href='/'>
                         <a>← 返回首页</a>
                     </Link>

@@ -2,65 +2,73 @@
  * @Author: AiLjx
  * @Date: 2022-08-08 17:23:54
  * @LastEditors: AiLjx
- * @LastEditTime: 2022-08-08 19:21:13
+ * @LastEditTime: 2022-08-09 16:28:17
  */
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
+import { parseISO } from "date-fns";
+import { serialize } from "next-mdx-remote/serialize";
+import prism from "remark-prism";
+// externalLinks在新页面打开链接
+import externalLinks from "remark-external-links";
 
-const postsDirectory = path.join(process.cwd(), "posts");
-
-export function getSortedPostsData() {
-    // Get file names under /posts
-    const fileNames = fs.readdirSync(postsDirectory);
-    const allPostsData = fileNames.map((fileName) => {
-        // Remove ".md" from file name to get id
-        const id = fileName.replace(/\.md$/, "");
-
-        // Read markdown file as string
-        const fullPath = path.join(postsDirectory, fileName);
-        const fileContents = fs.readFileSync(fullPath, "utf8");
-
-        // Use gray-matter to parse the post metadata section
-        const matterResult = matter(fileContents);
-
-        // Combine the data with the id
-        return {
-            id,
-            ...(matterResult.data as { date: string; title: string }),
-        };
-    });
-    console.log(allPostsData);
-    // Sort posts by date
-    return allPostsData.sort(({ date: a }, { date: b }) => {
-        if (a < b) {
-            return 1;
-        } else if (a > b) {
-            return -1;
-        } else {
-            return 0;
-        }
-    });
+interface MatterMark {
+    data: { date: string; title: string };
+    content: string;
+    [key: string]: unknown;
 }
 
-export function getAllPostIds() {
-    const fileNames = fs.readdirSync(postsDirectory);
+// posts目录的路径
+const postsDirectory = path.join(process.cwd(), "posts");
+// 获取posts目录下的所有文件名（带后缀）
+const fileNames = fs.readdirSync(postsDirectory);
 
-    // Returns an array that looks like this:
+// 获取所有文章用于展示列表的数据
+export function getSortedPostsData() {
+    // 获取所有md文件用于展示列表的数据，包含id，元素据（标题，时间）
+    const allPostsData = fileNames.map((fileName) => {
+        // 去除文件名的md后缀，使其作为文章id使用
+        const id = fileName.replace(/\.md$/, "");
+
+        // 获取md文件路径
+        const fullPath = path.join(postsDirectory, fileName);
+
+        // 读取md文件内容
+        const fileContents = fs.readFileSync(fullPath, "utf8");
+
+        // 使用matter提取md文件元数据：{data:{//元数据},content:'内容'}
+        const matterResult = matter(fileContents);
+
+        return {
+            id,
+            ...(matterResult.data as MatterMark["data"]),
+        };
+    });
+
+    // 按照日期从进到远排序
+    return allPostsData.sort(({ date: a }, { date: b }) =>
+        // parseISO：字符串转日期
+        parseISO(a) < parseISO(b) ? 1 : -1
+    );
+}
+
+// 获取格式化后的所有文章id（文件名）
+export function getAllPostIds() {
+    // 这是返回的格式:
     // [
     //   {
     //     params: {
-    //       id: 'ssg-ssr'
+    //       id: '......'
     //     }
     //   },
     //   {
     //     params: {
-    //       id: 'pre-rendering'
+    //       id: '......'
     //     }
     //   }
     // ]
+
     return fileNames.map((fileName) => {
         return {
             params: {
@@ -70,23 +78,21 @@ export function getAllPostIds() {
     });
 }
 
+// 获取指定文章内容
 export async function getPostData(id: string) {
+    // 文章路径
     const fullPath = path.join(postsDirectory, `${id}.md`);
+
+    // 读取文章内容
     const fileContents = fs.readFileSync(fullPath, "utf8");
 
-    // Use gray-matter to parse the post metadata section
+    // 使用matter解析markdown元数据和内容
     const matterResult = matter(fileContents);
 
-    // Use remark to convert markdown into HTML string
-    const processedContent = await remark()
-        .use(html)
-        .process(matterResult.content);
-    const contentHtml = processedContent.toString();
-
-    // Combine the data with the id
     return {
-        id,
-        contentHtml,
-        ...(matterResult.data as { date: string; title: string }),
+        content: await serialize(matterResult.content, {
+            mdxOptions: { remarkPlugins: [prism, externalLinks] },
+        }),
+        ...(matterResult.data as MatterMark["data"]),
     };
 }

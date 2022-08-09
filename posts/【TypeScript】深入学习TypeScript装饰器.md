@@ -3,10 +3,13 @@ title: "【TypeScript】深入学习TypeScript装饰器"
 date: "2022-08-08"
 ---
 
-> 👉 **TypeScript 学习**：[TypeScript 从入门到精通](https://blog.csdn.net/m0_51969330/category_11929325.html) ><br>👉 **蓝桥杯真题解析**：[蓝桥杯 Web 国赛真题解析](https://blog.csdn.net/m0_51969330/article/details/125360660?spm=1001.2014.3001.5502) > <br>👉 个人简介：即将大三的学生，热爱前端，热爱生活 🍬
+> 👉 **TypeScript 学习**：[TypeScript 从入门到精通](https://blog.csdn.net/m0_51969330/category_11929325.html)
+>
+> 👉 **蓝桥杯真题解析**：[蓝桥杯 Web 国赛真题解析](https://blog.csdn.net/m0_51969330/article/details/125360660?spm=1001.2014.3001.5502)
+>
+> 👉 个人简介：即将大三的学生，热爱前端，热爱生活 🍬
+>
 > 👉 你的一键三连是我更新的最大动力 ❤️！
-
-<hr>
 
 # 前言
 
@@ -16,8 +19,6 @@ date: "2022-08-08"
 
 > **注意：** 装饰器目前是一个**实验性的功能**，在未来的版本中可能会改变。
 > 要启用对装饰器的实验性支持，必须在 `tsconfig.json` 中启用`experimentalDecorators` 编译器选项
-
-@[TOC](文章目录)
 
 # 1、装饰器
 
